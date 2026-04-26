@@ -1,39 +1,42 @@
 'use client';
 
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { useMediaQuery } from 'react-responsive'
 import { ArrowUp, Square } from 'lucide-react';
 import useStore from '@/store/useStore';
 
-/* ─────────────────────────────────────────────────────────────
-   ChatInput
-   - Auto-growing textarea (max 200px)
-   - Send on Enter (Shift+Enter = newline)
-   - Disabled while streaming
-   - Stop button while AI is responding
-───────────────────────────────────────────────────────────── */
+/* Touch device detection — much more reliable than screen width.
+   Returns true for phones/tablets regardless of zoom level.
+   Uses maxTouchPoints (all modern browsers) with ontouchstart as fallback. */
+const isTouchDevice = () => {
+  if (typeof window === 'undefined') return false;
+  return navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+};
+
 export default function ChatInput({ onSend, onStop }) {
   const textareaRef = useRef(null);
-  const isLoading = useStore((state) => state.isLoading);
-  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
-  const [input, setInput] = useState('')
-  // Auto-resize textarea
+  const isLoading   = useStore((state) => state.isLoading);
+  const [input, setInput] = useState('');
+
   const resize = useCallback(() => {
     const ta = textareaRef.current;
     if (!ta) return;
     ta.style.height = 'auto';
     ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
   }, []);
+
   const handleOnChange = (e) => {
-    setInput(e?.target?.value)
-    resize()
-  }
+    setInput(e?.target?.value);
+    resize();
+  };
+
   useEffect(() => {
     resize();
   }, [resize]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
+    // Enter sends only on non-touch devices (desktop/laptop)
+    // On touch devices (mobile/tablet) Enter = newline, user taps the button
+    if (e.key === 'Enter' && !e.shiftKey && !isTouchDevice()) {
       e.preventDefault();
       handleSend();
     }
@@ -45,16 +48,15 @@ export default function ChatInput({ onSend, onStop }) {
 
     onSend(value);
     textareaRef.current.value = '';
-    setInput('')
+    setInput('');
     resize();
     textareaRef.current.focus();
   };
 
   return (
     <div className="px-4 py-4">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto max-w-[500px]">
         <div className="input-wrapper">
-          {/* Textarea */}
           <textarea
             ref={textareaRef}
             rows={1}
@@ -72,7 +74,6 @@ export default function ChatInput({ onSend, onStop }) {
             "
           />
 
-          {/* Send / Stop button */}
           {isLoading ? (
             <button
               onClick={onStop}
@@ -99,7 +100,7 @@ export default function ChatInput({ onSend, onStop }) {
                 text-white transition-all duration-500
                 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed
                 bg-brand-600
-                ${input===''?'opacity-65':'opacity-100'}
+                ${input === '' ? 'opacity-65' : 'opacity-100'}
               `}
             >
               <ArrowUp className="w-4 h-4" />
@@ -107,9 +108,8 @@ export default function ChatInput({ onSend, onStop }) {
           )}
         </div>
 
-        {/* Disclaimer */}
         <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 mt-2">
-          AI can make mistakes.<br/>
+          AI can make mistakes.<br />
           <b>©</b> Ariq Azmain {new Date().getFullYear()}
         </p>
       </div>

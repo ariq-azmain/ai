@@ -3,36 +3,26 @@
 import { useEffect } from 'react';
 import useStore from '@/store/useStore';
 
-/* ─────────────────────────────────────────────────────────────
-   ThemeProvider
-   Reads theme from Zustand store and applies the 'dark' class
-   to <html>. Also listens to system preference changes.
-───────────────────────────────────────────────────────────── */
 export default function ThemeProvider({ children }) {
   const theme = useStore((state) => state.theme);
 
   useEffect(() => {
-    const root = document.documentElement;
+    const root    = document.documentElement;
+    const mediaq  = window.matchMedia('(prefers-color-scheme: dark)');
 
-    const applyTheme = (prefersDark) => {
-      //  || (theme === 'system' && prefersDark)
-      if (theme === 'dark') {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+    const apply = (sysDark) => {
+      const shouldDark =
+        theme === 'dark' || (theme === 'system' && sysDark);
+      root.classList.toggle('dark', shouldDark);
     };
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    applyTheme(mediaQuery.matches);
+    // Apply immediately
+    apply(mediaq.matches);
 
-    // Listen for system theme changes
-    const handler = (e) => {
-      if (theme === 'system') applyTheme(e.matches);
-    };
-    mediaQuery.addEventListener('change', handler);
-
-    return () => mediaQuery.removeEventListener('change', handler);
+    // Keep in sync with system changes (only matters when theme === 'system')
+    const handler = (e) => apply(e.matches);
+    mediaq.addEventListener('change', handler);
+    return () => mediaq.removeEventListener('change', handler);
   }, [theme]);
 
   return <>{children}</>;
