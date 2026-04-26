@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+/* ─── Theme: Custom Colors, Fonts & Animations (from tailwind.config.js) ─── */
+@theme {
+  /* Brand Colors */
+  --color-brand-50: #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+
+  /* Font Family */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  /* Animations */
+  --animate-blink: blink 1s step-end infinite;
+  --animate-fade-in: fadeIn 0.2s ease-out;
+  --animate-slide-in: slideIn 0.25s ease-out;
+
+  /* Keyframes */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+}
+
+/* ─── Dark mode via .dark class (replaces darkMode: 'class' from config) ─── */
+@variant dark (&:where(.dark *));
+
+/* ─── Base Layer ─────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+    @apply transition-colors duration-200;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-zinc-300 dark:bg-zinc-700;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-400 dark:bg-zinc-600;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  textarea {
+    @apply resize-none outline-none;
+    font-family: inherit;
+  }
+}
+
+/* ─── Component Layer ────────────────────────────────────────────────────── */
+@layer components {
+  /* Sidebar */
+  .sidebar-root {
+    @apply flex h-full flex-col;
+    @apply bg-white dark:bg-zinc-900;
+    @apply border-r border-zinc-200 dark:border-zinc-800;
+  }
+
+  /* Icon button reusable */
+  .btn-icon {
+    @apply flex items-center justify-center;
+    @apply rounded-xl p-2 cursor-pointer;
+    @apply text-zinc-500 dark:text-zinc-400;
+    @apply hover:bg-zinc-100 dark:hover:bg-zinc-800;
+    @apply transition-colors duration-150;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply flex items-center gap-2 px-4 py-2 rounded-xl;
+    @apply bg-brand-600 hover:bg-brand-700 text-white;
+    @apply font-medium text-sm cursor-pointer;
+    @apply transition-colors duration-150;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply flex items-center gap-2 px-3 py-2 rounded-xl;
+    @apply text-zinc-600 dark:text-zinc-400;
+    @apply hover:bg-zinc-100 dark:hover:bg-zinc-800;
+    @apply font-medium text-sm cursor-pointer;
+    @apply transition-colors duration-150;
+  }
+
+  /* Input wrapper */
+  .input-wrapper {
+    @apply relative flex items-end gap-2;
+    @apply bg-white dark:bg-zinc-900;
+    @apply border border-zinc-200 dark:border-zinc-700;
+    @apply rounded-2xl px-4 py-3;
+    @apply shadow-sm dark:shadow-none;
+    @apply focus-within:border-brand-500 dark:focus-within:border-brand-500;
+    @apply transition-colors duration-150;
+  }
+
+  /* Message bubble – user */
+  .msg-user {
+    @apply ml-auto max-w-[80%] rounded-2xl rounded-br-sm;
+    @apply bg-brand-600 text-white;
+    @apply px-4 py-3 text-sm leading-relaxed;
+  }
+
+  /* Message bubble – AI */
+  .msg-ai {
+    @apply max-w-[85%] text-sm leading-relaxed;
+    @apply text-zinc-800 dark:text-zinc-200;
+    @apply whitespace-pre-wrap;
+  }
+
+  /* Pill / badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5;
+    @apply text-xs font-medium rounded-full;
+    @apply bg-zinc-100 dark:bg-zinc-800;
+    @apply text-zinc-600 dark:text-zinc-400;
+  }
+
+  /* Settings modal overlay */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-end sm:items-center justify-center;
+    @apply bg-black/40 backdrop-blur-sm;
+    @apply animate-fade-in;
+  }
+
+  /* Settings modal box */
+  .modal-box {
+    @apply w-full sm:w-[440px] rounded-t-2xl sm:rounded-2xl;
+    @apply bg-white dark:bg-zinc-900;
+    @apply border border-zinc-200 dark:border-zinc-800;
+    @apply p-6 shadow-2xl;
+    @apply animate-slide-in;
+  }
+
+  /* Theme option button */
+  .theme-option {
+    @apply flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer;
+    @apply border-2 border-transparent;
+    @apply hover:bg-zinc-50 dark:hover:bg-zinc-800;
+    @apply transition-all duration-150;
+  }
+
+  .theme-option.active {
+    @apply border-brand-500 bg-brand-50 dark:bg-brand-600/10;
+  }
+}
+
+/* ─── Utility Layer ──────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Typing cursor blink */
+  .cursor-blink::after {
+    content: '▋';
+    @apply animate-blink text-brand-500 ml-0.5 text-xs;
+  }
+
+  /* Subtle gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
