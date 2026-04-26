@@ -1,9 +1,12 @@
-import './globals.css';
-import ThemeProvider from '@/providers/ThemeProvider';
+import "./globals.css";
+import ThemeProvider from "@/providers/ThemeProvider";
+import InstallButton from "@/components/InstallButton";
 
 export const metadata = {
-  title: 'AI Chat',
-  description: 'Your intelligent AI assistant powered by DeepSeek',
+    title: "AI Chat",
+    description: "Your intelligent AI assistant powered by DeepSeek",
+    manifest: "/manifest.json",
+    themeColor: "#a78bfa"
 };
 
 /* Inline script injected before React hydrates — prevents
@@ -23,15 +26,18 @@ const themeScript = `
 `;
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Prevent theme flash */}
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <head>
+                {/* Prevent theme flash */}
+                <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+            </head>
+            <body>
+                <ThemeProvider>
+                    <InstallButton />
+                    {children}
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }
