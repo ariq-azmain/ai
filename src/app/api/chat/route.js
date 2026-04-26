@@ -19,7 +19,6 @@ const SYSTEM_PROMPT = `You are a helpful, knowledgeable, and friendly AI assista
 Provide clear, accurate, and concise responses.
 If you don't know something, say so honestly.
 Format responses naturally — use paragraphs, bullet points, or code blocks when it improves clarity.
-Your name is 'Ariq', And full name is 'Ariq Azmain'.
 `;
 
 export async function POST(req) {
