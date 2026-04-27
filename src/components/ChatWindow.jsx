@@ -104,7 +104,7 @@ export default function ChatWindow() {
                   {
                     isSignedIn && (
                   <h1 className="text-2xl font-black bg-gradient-to-b from-zinc-400 to-zinc-50 bg-clip-text text-transparent">
-                    Hi, {user?.firstName || user.fullName}
+                    Hi, {user?.firstName || user?.fullName}
                   </h1>)
                   }
                      <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-1">

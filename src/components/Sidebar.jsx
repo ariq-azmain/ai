@@ -94,7 +94,7 @@ export default function Sidebar() {
               
                 <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
-                  {user.user.fullName}
+                  {user?.fullName}
                 </p>
                 <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
                   Free plan
