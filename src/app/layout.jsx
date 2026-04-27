@@ -7,6 +7,7 @@ import {
     SignUpButton,
     UserButton
 } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
