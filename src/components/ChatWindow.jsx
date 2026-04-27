@@ -102,7 +102,7 @@ export default function ChatWindow() {
                   </div>
                   <div className="text-center">
                   {
-                    (isSignedIn && !isLoaded) && (
+                    isSignedIn && (
                   <h1 className="text-2xl font-black bg-gradient-to-b from-zinc-400 to-zinc-50 bg-clip-text text-transparent">
                     Hi, {user?.firstName || user.fullName}
                   </h1>)

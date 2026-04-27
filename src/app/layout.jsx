@@ -1,6 +1,12 @@
-import gsap from 'gsap'
-import {Draggable} from 'gsap/Draggable'
-import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import gsap from "gsap";
+import { Draggable } from "gsap/Draggable";
+import {
+    ClerkProvider,
+    Show,
+    SignInButton,
+    SignUpButton,
+    UserButton
+} from "@clerk/nextjs";
 
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
@@ -14,12 +20,12 @@ export const metadata = {
     manifest: "/manifest.json"
 };
 export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-}
-gsap.registerPlugin(Draggable)
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false
+};
+gsap.registerPlugin(Draggable);
 /* Inline script injected before React hydrates — prevents
    theme flash by reading localStorage and setting the class
    on <html> synchronously before paint.                    */
@@ -44,15 +50,19 @@ export default function RootLayout({ children }) {
                 <script dangerouslySetInnerHTML={{ __html: themeScript }} />
             </head>
             <body>
-            <ClerkProvider>
-                <ThemeProvider>
-                <ZoomControl/>
-                    <InstallButton />
-                    {
-                    //<InstallWindow/>
-                    }
-                    {children}
-                </ThemeProvider>
+                <ClerkProvider
+                    appearance={{
+                        baseTheme: dark
+                    }}
+                >
+                    <ThemeProvider>
+                        <ZoomControl />
+                        <InstallButton />
+                        {
+                            //<InstallWindow/>
+                        }
+                        {children}
+                    </ThemeProvider>
                 </ClerkProvider>
             </body>
         </html>

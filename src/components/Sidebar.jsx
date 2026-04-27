@@ -1,6 +1,6 @@
 'use client';
 
-import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { Show, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
 
 import { MessageSquarePlus, Settings, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import useStore from '@/store/useStore';
@@ -13,7 +13,7 @@ import useStore from '@/store/useStore';
 ───────────────────────────────────────────────────────────── */
 export default function Sidebar() {
   const { sidebarOpen, toggleSidebar, clearMessages, setSettingsOpen } = useStore();
-
+  const { isSignedIn, user, isLoaded } = useUser()
   const handleNewChat = () => {
     clearMessages();
     toggleSidebar();
@@ -72,23 +72,8 @@ export default function Sidebar() {
 
           {/* ── Bottom: User + Settings ────────────── */}
           <div className="px-3 py-4 border-t border-zinc-200 dark:border-zinc-800 space-y-1">
-            {/* Demo user row */}
+            {/* user row */}
             <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-default">
-              {/* Avatar */
-              
-              // <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
-              //   <span className="text-xs font-bold text-white">U</span>
-              // </div>
-              
-              //   <div className="flex-1 min-w-0">
-              //   <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
-              //     User
-              //   </p>
-              //   <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
-              //     Free plan
-              //   </p>
-              // </div>
-              }
               <Show when="signed-out">
               <SignInButton />
               <SignUpButton>
@@ -100,6 +85,22 @@ export default function Sidebar() {
             <Show when="signed-in">
               <UserButton />
             </Show>
+              {/* Avatar */
+              
+              // <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+              //   <span className="text-xs font-bold text-white">U</span>
+              // </div>
+              }
+              
+                <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
+                  {user.user.fullName}
+                </p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
+                  Free plan
+                </p>
+              </div>
+              
             </div>
 
             {/* Settings button */}
