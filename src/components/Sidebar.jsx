@@ -1,5 +1,7 @@
 'use client';
 
+import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+
 import { MessageSquarePlus, Settings, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import useStore from '@/store/useStore';
 
@@ -76,14 +78,27 @@ export default function Sidebar() {
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
                 <span className="text-xs font-bold text-white">U</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
-                  User
-                </p>
-                <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
-                  Free plan
-                </p>
-              </div>
+              {
+              //   <div className="flex-1 min-w-0">
+              //   <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
+              //     User
+              //   </p>
+              //   <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">
+              //     Free plan
+              //   </p>
+              // </div>
+              }
+              <Show when="signed-out">
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
             </div>
 
             {/* Settings button */}

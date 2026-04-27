@@ -1,5 +1,6 @@
 import gsap from 'gsap'
 import {Draggable} from 'gsap/Draggable'
+import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
 
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
                 <script dangerouslySetInnerHTML={{ __html: themeScript }} />
             </head>
             <body>
+            <ClerkProvider>
                 <ThemeProvider>
                 <ZoomControl/>
                     <InstallButton />
@@ -51,6 +53,7 @@ export default function RootLayout({ children }) {
                     }
                     {children}
                 </ThemeProvider>
+                </ClerkProvider>
             </body>
         </html>
     );

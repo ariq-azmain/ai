@@ -8,6 +8,7 @@
     "start": "next start -H 127.0.0.1"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.2.7",
     "@google/generative-ai": "^0.24.1",
     "@gsap/react": "^2.1.2",
     "gsap": "^3.12.7",
