@@ -51,6 +51,13 @@
     @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
     @apply transition-colors duration-200;
   }
+  html, body {
+  /* টাচ স্ক্রিনে জুম এবং প্যানিং নিয়ন্ত্রণ */
+  touch-action: pan-x pan-y; 
+  /* pan-x pan-y এর মানে হলো ইউজার স্ক্রল করতে পারবে কিন্তু জুম করতে পারবে না */
+  
+  -webkit-text-size-adjust: 100%; /* ফন্ট সাইজ অটো জুম হওয়া রোধ করে */
+  }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {

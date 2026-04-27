@@ -5,12 +5,19 @@ import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import InstallButton from "@/components/InstallButton";
 import InstallWindow from "@/components/InstallWindow";
+import ZoomControl from "@/controllers/ZoomControll";
 
 export const metadata = {
     title: "AI Chat",
     description: "Your intelligent AI assistant created by Ariq Azmain",
     manifest: "/manifest.json"
 };
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 gsap.registerPlugin(Draggable)
 /* Inline script injected before React hydrates — prevents
    theme flash by reading localStorage and setting the class
@@ -37,7 +44,7 @@ export default function RootLayout({ children }) {
             </head>
             <body>
                 <ThemeProvider>
-                
+                <ZoomControl/>
                     <InstallButton />
                     {
                     //<InstallWindow/>
