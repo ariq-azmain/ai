@@ -1,6 +1,8 @@
 "use client";
 
+
 import { useEffect, useRef, useCallback } from "react";
+import { useUser } from '@clerk/nextjs'
 import { useMediaQuery } from 'react-responsive'
 import { Bot } from "lucide-react";
 import useStore from "@/store/useStore";
@@ -26,7 +28,7 @@ export default function ChatWindow() {
   const isMobile = useMediaQuery({ query: "(max-width: 500px)" });
    const bottomRef = useRef(null);
    const abortRef = useRef(null); // AbortController ref for stop
-
+  const { isSignedIn, user, isLoaded } = useUser()
    // Auto-scroll whenever messages change
    useEffect(() => {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -99,9 +101,15 @@ export default function ChatWindow() {
                      <Bot className="w-8 h-8 text-brand-600 dark:text-brand-400" />
                   </div>
                   <div className="text-center">
-                     <h1 className="text-xl font-semibold text-zinc-800 dark:text-zinc-200 mb-1">
+                  {
+                    (isSignedIn && !isLoaded) && (
+                  <h1 className="text-2xl font-black bg-gradient-to-b from-zinc-400 to-zinc-50 bg-clip-text text-transparent">
+                    Hi, {user?.firstName || user.fullName}
+                  </h1>)
+                  }
+                     <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-1">
                         How can I help you today?
-                     </h1>
+                     </h2>
                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         Ask me anything — I&apos;m ready to assist you.
                      </p>
