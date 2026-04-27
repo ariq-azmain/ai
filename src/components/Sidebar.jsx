@@ -22,10 +22,9 @@ export default function Sidebar() {
       {/* Sidebar panel */}
       <aside
         className={`
-          sidebar-root relative z-10
+          sidebar-root relative z-0
           transition-all duration-300 ease-in-out flex-shrink-0
-          
-          ${sidebarOpen ? 'absolute top-0 right-0 left-0 bottom-0 h-screen w-fit px-5': 'w-0 border-r-0 overflow-hidden'}
+          ${sidebarOpen ? 'absolute top-0 left-0 bottom-0 h-screen px-5 !w-full': 'w-0 border-r-0 overflow-hidden'}
         `}
       >
         <div className="flex h-full flex-col w-64">

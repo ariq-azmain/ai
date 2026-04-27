@@ -1,14 +1,17 @@
+import gsap from 'gsap'
+import {Draggable} from 'gsap/Draggable'
+
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import InstallButton from "@/components/InstallButton";
+import InstallWindow from "@/components/InstallWindow";
 
 export const metadata = {
     title: "AI Chat",
-    description: "Your intelligent AI assistant powered by DeepSeek",
-    manifest: "/manifest.json",
-    themeColor: "#a78bfa"
+    description: "Your intelligent AI assistant created by Ariq Azmain",
+    manifest: "/manifest.json"
 };
-
+gsap.registerPlugin(Draggable)
 /* Inline script injected before React hydrates — prevents
    theme flash by reading localStorage and setting the class
    on <html> synchronously before paint.                    */
@@ -34,7 +37,11 @@ export default function RootLayout({ children }) {
             </head>
             <body>
                 <ThemeProvider>
+                
                     <InstallButton />
+                    {
+                    //<InstallWindow/>
+                    }
                     {children}
                 </ThemeProvider>
             </body>

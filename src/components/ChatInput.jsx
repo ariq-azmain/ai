@@ -3,14 +3,11 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import { ArrowUp, Square } from 'lucide-react';
 import useStore from '@/store/useStore';
-
+import { isTouchDevice } from '@/utility'
 /* Touch device detection — much more reliable than screen width.
    Returns true for phones/tablets regardless of zoom level.
    Uses maxTouchPoints (all modern browsers) with ontouchstart as fallback. */
-const isTouchDevice = () => {
-  if (typeof window === 'undefined') return false;
-  return navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
-};
+
 
 export default function ChatInput({ onSend, onStop }) {
   const textareaRef = useRef(null);
@@ -110,7 +107,7 @@ export default function ChatInput({ onSend, onStop }) {
 
         <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 mt-2">
           AI can make mistakes.<br />
-          <b>©</b> Ariq Azmain {new Date().getFullYear()}
+          <b>©</b> Ariq Azmain 2026 {new Date().getFullYear()}
         </p>
       </div>
     </div>
