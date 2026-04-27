@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.2.7",
+    "@clerk/themes": "^2.4.57",
     "@google/generative-ai": "^0.24.1",
     "@gsap/react": "^2.1.2",
     "gsap": "^3.12.7",
