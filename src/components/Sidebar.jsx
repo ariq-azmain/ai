@@ -74,11 +74,12 @@ export default function Sidebar() {
           <div className="px-3 py-4 border-t border-zinc-200 dark:border-zinc-800 space-y-1">
             {/* Demo user row */}
             <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-default">
-              {/* Avatar */}
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-bold text-white">U</span>
-              </div>
-              {
+              {/* Avatar */
+              
+              // <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+              //   <span className="text-xs font-bold text-white">U</span>
+              // </div>
+              
               //   <div className="flex-1 min-w-0">
               //   <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
               //     User
