@@ -53,7 +53,11 @@ export default function RootLayout({ children }) {
             <body>
                 <ClerkProvider
                     appearance={{
-                        baseTheme: dark
+                        baseTheme: dark,
+                        variables: {
+                            colorBackground: "#0b0f18",
+                            colorText: "white"
+                        }
                     }}
                 >
                     <ThemeProvider>
