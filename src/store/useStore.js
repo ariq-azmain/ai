@@ -48,14 +48,17 @@ const useStore = create(
 
       // ── UI State ───────────────────────────────────────────
       sidebarOpen: false,
-      toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })), 
+      toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
 
       settingsOpen: false,
       setSettingsOpen: (open) => set({ settingsOpen: open }),
     }),
     {
       name: 'ai-chat-storage',
-      partialize: (state) => ({ theme: state.theme }),
+      partialize: (state) => ({
+        theme: state.theme,
+        currentConversationId: state.currentConversationId,
+      }),
     }
   )
 );

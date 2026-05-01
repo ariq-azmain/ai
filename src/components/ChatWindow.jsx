@@ -11,12 +11,12 @@ export default function ChatWindow() {
   const {
     messages, isLoading,
     addMessage, appendToLastMessage, setLoading,
+    setMessages,
     sidebarOpen,
     currentConversationId, setCurrentConversationId,
     addConversation, updateConversationTime,
   } = useStore();
 
-  const isMobileRef = useRef(null);
   const bottomRef = useRef(null);
   const abortRef = useRef(null);
   const { isSignedIn, user } = useUser();
@@ -24,6 +24,16 @@ export default function ChatWindow() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Refresh করলে currentConversationId থেকে messages reload করো
+  useEffect(() => {
+    if (!currentConversationId || messages.length > 0) return;
+    setLoading(true);
+    fetch(`/api/conversations/${currentConversationId}/messages`)
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setMessages(data); })
+      .finally(() => setLoading(false));
+  }, [currentConversationId]);
 
   const handleSend = useCallback(async (content) => {
     const userMessage = { role: "user", content };
@@ -35,7 +45,6 @@ export default function ChatWindow() {
 
     let convId = currentConversationId;
 
-    // Create new conversation on first message (only if signed in)
     if (!convId && isSignedIn) {
       const title = content.slice(0, 50);
       const res = await fetch('/api/conversations', {
@@ -77,7 +86,6 @@ export default function ChatWindow() {
         appendToLastMessage(decoder.decode(value, { stream: true }));
       }
 
-      // Update conversation time in sidebar
       if (convId) updateConversationTime(convId);
 
     } catch (err) {
@@ -94,7 +102,6 @@ export default function ChatWindow() {
     abortRef.current?.abort();
   }, []);
 
-  // Hide chat when sidebar is open on mobile
   const isMobile = typeof window !== 'undefined' && navigator.maxTouchPoints > 0;
   if (sidebarOpen && isMobile) return null;
 
