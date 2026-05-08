@@ -1,17 +1,35 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Show, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
-import { MessageSquarePlus, Settings, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
+import {
+  Show,
+  SignInButton,
+  SignUpButton, 
+  UserButton, 
+  useUser
+} from '@clerk/nextjs';
+import { 
+  MessageSquarePlus,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Bot
+} from 'lucide-react';
+
 import useStore from '@/store/useStore';
 
 export default function Sidebar() {
   const {
-    sidebarOpen, toggleSidebar,
-    clearMessages, setSettingsOpen,
-    conversations, setConversations,
-    currentConversationId, setCurrentConversationId,
-    setMessages, setLoading,
+    sidebarOpen,
+    toggleSidebar,
+    clearMessages,
+    setSettingsOpen,
+    conversations, 
+    setConversations,
+    currentConversationId,
+    setCurrentConversationId,
+    setMessages,
+    setLoading,
   } = useStore();
 
   const { isSignedIn, user } = useUser();
@@ -95,8 +113,8 @@ export default function Sidebar() {
                       w-full text-left px-3 py-2 rounded-lg text-xs truncate cursor-pointer
                       transition-colors duration-150
                       ${currentConversationId === conv.id
-                        ? 'bg-brand-50 dark:bg-brand-600/20 text-brand-700 dark:text-brand-300'
-                        : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'}
+                        ? 'bg-brand-50 dark:bg-brand-600 text-brand-700 dark:text-brand-200'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 bg-neutral-100 dark:bg-neutral-950'}
                     `}
                   >
                     {conv.title}

@@ -2,8 +2,8 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function Page() {
     return (
-        <div className="h-screen w-screen flex justify-center items-center bg-black">
+        <main className="h-screen w-screen flex justify-center items-center bg-black">
             <SignIn />
-        </div>
+        </main>
     );
 }

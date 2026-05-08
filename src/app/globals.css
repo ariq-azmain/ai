@@ -52,13 +52,14 @@
     @apply transition-colors duration-200;
   }
   html, body {
-  /* টাচ স্ক্রিনে জুম এবং প্যানিং নিয়ন্ত্রণ */
-  touch-action: pan-x pan-y; 
-  /* pan-x pan-y এর মানে হলো ইউজার স্ক্রল করতে পারবে কিন্তু জুম করতে পারবে না */
-  
-  -webkit-text-size-adjust: 100%; /* ফন্ট সাইজ অটো জুম হওয়া রোধ করে */
+    touch-action: pan-x pan-y; 
+    -webkit-text-size-adjust: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
+  }
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 4px;
@@ -73,11 +74,22 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-zinc-400 dark:bg-zinc-600;
   }
-
   * {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* Standard */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
     @apply box-border;
   }
-
+  
+  input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
   textarea {
     @apply resize-none outline-none;
     font-family: inherit;

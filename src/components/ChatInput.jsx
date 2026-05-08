@@ -107,7 +107,7 @@ export default function ChatInput({ onSend, onStop }) {
 
         <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 mt-2">
           AI can make mistakes.<br />
-          <b>©</b> Ariq Azmain 2026 {new Date().getFullYear()}
+          <b>©</b> Ariq Azmain {new Date().getFullYear()}
         </p>
       </div>
     </div>

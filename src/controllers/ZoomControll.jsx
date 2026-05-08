@@ -1,4 +1,3 @@
-// একটি ক্লায়েন্ট কম্পোনেন্টে এটি ব্যবহার করুন
 "use client";
 import { useEffect } from "react";
 
@@ -6,7 +5,7 @@ export default function ZoomControl() {
   useEffect(() => {
     const handleWheel = (e) => {
       if (e.ctrlKey) {
-        e.preventDefault(); // Ctrl + Scroll জুম বন্ধ করবে
+        e.preventDefault(); // Ctrl + Scroll stop zoom
       }
     };
 
@@ -16,15 +15,15 @@ export default function ZoomControl() {
       window.removeEventListener("wheel", handleWheel);
     };
   }, []);
-useEffect(() => {
-    // ২ আঙ্গুলে পিন্চ জুম আটকানোর জন্য
+  useEffect(() => {
+    // 2. pinch zoon stop
     const handleTouch = (e) => {
       if (e.touches.length > 1) {
         e.preventDefault();
       }
     };
 
-    // ডাবল ট্যাপ জুম আটকানোর জন্য
+    // doble tap zoom stop
     let lastTouchEnd = 0;
     const handleTouchEnd = (e) => {
       const now = (new Date()).getTime();

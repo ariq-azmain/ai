@@ -1,6 +1,8 @@
 'use client';
 import { X } from 'lucide-react';
+import { useMediaQuery } from "react-responsive";
 
+import Drag from '@/providers/Drag'
 import { THEMES } from '@/constants'
 import useStore from '@/store/useStore';
 
@@ -11,13 +13,17 @@ import useStore from '@/store/useStore';
 ───────────────────────────────────────────────────────────── */
 
 
-export default function SettingsModal() {
+const SettingsModal = () => {
   const { settingsOpen, setSettingsOpen, theme, setTheme } = useStore();
-
+  const isDrag = useMediaQuery({maxWidth: 640})
   if (!settingsOpen) return null;
-
+  const ConditionalDragProvider = ({children}) => {
+    if(isDrag) return children;
+    return <Drag>{children}</Drag>;
+  }
   return (
     <div className="modal-overlay" onClick={() => setSettingsOpen(false)}>
+    <ConditionalDragProvider>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -84,6 +90,10 @@ export default function SettingsModal() {
           ))}
         </section>
       </div>
+      </ConditionalDragProvider>
     </div>
   );
 }
+
+
+export default SettingsModal
