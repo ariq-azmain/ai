@@ -6,7 +6,7 @@ import {
   UserButton
 } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 
@@ -76,6 +76,7 @@ export default function RootLayout({ children }) {
               //<InstallWindow/>
             }
             {children}
+            <Analytics/>
           </ThemeProvider>
         </ClerkProvider>
       </body>
