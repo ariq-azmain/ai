@@ -1,17 +1,15 @@
 'use client';
 
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import { ArrowUp, Square } from 'lucide-react';
+import { gsap } from 'gsap';
 import useStore from '@/store/useStore';
-import { isTouchDevice } from '@/utility'
-/* Touch device detection — much more reliable than screen width.
-   Returns true for phones/tablets regardless of zoom level.
-   Uses maxTouchPoints (all modern browsers) with ontouchstart as fallback. */
-
+import { isTouchDevice } from '@/utility';
 
 export default function ChatInput({ onSend, onStop }) {
-  const textareaRef = useRef(null);
-  const isLoading   = useStore((state) => state.isLoading);
+  const textareaRef  = useRef(null);
+  const wrapperRef   = useRef(null);
+  const isLoading    = useStore(s => s.isLoading);
   const [input, setInput] = useState('');
 
   const resize = useCallback(() => {
@@ -21,18 +19,23 @@ export default function ChatInput({ onSend, onStop }) {
     ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
   }, []);
 
-  const handleOnChange = (e) => {
-    setInput(e?.target?.value);
+  useEffect(() => { resize(); }, [resize]);
+
+  // GSAP entrance
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    gsap.fromTo(wrapperRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', delay: 0.1 }
+    );
+  }, []);
+
+  const handleOnChange = e => {
+    setInput(e.target.value);
     resize();
   };
 
-  useEffect(() => {
-    resize();
-  }, [resize]);
-
-  const handleKeyDown = (e) => {
-    // Enter sends only on non-touch devices (desktop/laptop)
-    // On touch devices (mobile/tablet) Enter = newline, user taps the button
+  const handleKeyDown = e => {
     if (e.key === 'Enter' && !e.shiftKey && !isTouchDevice()) {
       e.preventDefault();
       handleSend();
@@ -43,6 +46,12 @@ export default function ChatInput({ onSend, onStop }) {
     const value = textareaRef.current?.value.trim();
     if (!value || isLoading) return;
 
+    // Send button pop animation
+    gsap.fromTo('.btn-send',
+      { scale: 0.9 },
+      { scale: 1, duration: 0.2, ease: 'back.out(2)' }
+    );
+
     onSend(value);
     textareaRef.current.value = '';
     setInput('');
@@ -51,63 +60,47 @@ export default function ChatInput({ onSend, onStop }) {
   };
 
   return (
-    <div className="px-4 py-4">
-      <div className="max-w-3xl mx-auto max-w-[500px]">
+    <div ref={wrapperRef} className="px-4 pb-4 pt-2">
+      <div className="max-w-3xl mx-auto">
         <div className="input-wrapper">
           <textarea
             ref={textareaRef}
             rows={1}
             onChange={handleOnChange}
             onKeyDown={handleKeyDown}
-            placeholder="Message AI..."
+            placeholder="Message Action..."
             disabled={isLoading}
             value={input}
             className="
               flex-1 bg-transparent text-sm leading-relaxed
-              text-zinc-900 dark:text-zinc-100
-              placeholder:text-zinc-400 dark:placeholder:text-zinc-500
-              disabled:opacity-60
-              max-h-[200px] overflow-y-auto
+              text-zinc-100 placeholder:text-zinc-600
+              disabled:opacity-50 max-h-[200px] overflow-y-auto
             "
           />
 
           {isLoading ? (
             <button
               onClick={onStop}
-              title="Stop generating"
-              className="
-                flex-shrink-0 w-8 h-8 rounded-xl
-                bg-zinc-200 dark:bg-zinc-700
-                hover:bg-zinc-300 dark:hover:bg-zinc-600
-                flex items-center justify-center
-                text-zinc-700 dark:text-zinc-300
-                transition-colors duration-150 cursor-pointer
-              "
+              title="Stop"
+              className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-150"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid #2a2a3a', color: '#888' }}
             >
               <Square className="w-3.5 h-3.5 fill-current" />
             </button>
           ) : (
             <button
               onClick={handleSend}
-              title="Send message"
-              className={`
-                flex-shrink-0 w-8 h-8 rounded-xl
-                hover:bg-brand-700
-                flex items-center justify-center
-                text-white transition-all duration-500
-                cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed
-                bg-brand-600
-                ${input === '' ? 'opacity-65' : 'opacity-100'}
-              `}
+              title="Send"
+              disabled={!input.trim()}
+              className="btn-send"
             >
               <ArrowUp className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 mt-2">
-          AI can make mistakes.<br />
-          <b>©</b> Ariq Azmain {new Date().getFullYear()}
+        <p className="text-center text-[10px] mt-2" style={{ color: '#3a3a50' }}>
+          Action AI · © Ariq Azmain {new Date().getFullYear()}
         </p>
       </div>
     </div>

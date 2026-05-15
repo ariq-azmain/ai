@@ -1,46 +1,53 @@
 'use client';
 
-import { useEffect } from 'react';
-import {
-  Show,
-  SignInButton,
-  SignUpButton, 
-  UserButton, 
-  useUser
-} from '@clerk/nextjs';
-import { 
-  MessageSquarePlus,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  Bot
-} from 'lucide-react';
-
+import { useEffect, useRef } from 'react';
+import { Show, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { MessageSquarePlus, Settings, ChevronLeft, ChevronRight, LogIn } from 'lucide-react';
+import { gsap } from 'gsap';
 import useStore from '@/store/useStore';
+import { ActionWordmark, ActionIcon } from '@/components/ActionLogo';
 
 export default function Sidebar() {
   const {
-    sidebarOpen,
-    toggleSidebar,
-    clearMessages,
-    setSettingsOpen,
-    conversations, 
-    setConversations,
-    currentConversationId,
-    setCurrentConversationId,
-    setMessages,
-    setLoading,
+    sidebarOpen, toggleSidebar,
+    clearMessages, setSettingsOpen,
+    conversations, setConversations,
+    currentConversationId, setCurrentConversationId,
+    setMessages, setLoading,
   } = useStore();
 
   const { isSignedIn, user } = useUser();
+  const listRef  = useRef(null);
+  const logoRef  = useRef(null);
 
-  // Load conversations when user signs in
+  // Load conversations
   useEffect(() => {
     if (!isSignedIn) return;
     fetch('/api/conversations')
-      .then((r) => r.json())
-      .then((data) => { if (Array.isArray(data)) setConversations(data); });
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setConversations(data); });
   }, [isSignedIn]);
+
+  // Animate conversations list on load
+  useEffect(() => {
+    if (!listRef.current || !conversations.length) return;
+    gsap.fromTo(
+      listRef.current.children,
+      { opacity: 0, x: -12 },
+      { opacity: 1, x: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' }
+    );
+  }, [conversations.length]);
+
+  // Animate sidebar open
+  useEffect(() => {
+    if (!logoRef.current) return;
+    if (sidebarOpen) {
+      gsap.fromTo(logoRef.current,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }
+      );
+    }
+  }, [sidebarOpen]);
 
   const handleNewChat = () => {
     clearMessages();
@@ -49,73 +56,76 @@ export default function Sidebar() {
 
   const handleSelectConversation = async (id) => {
     if (id === currentConversationId) { toggleSidebar(); return; }
-
     setLoading(true);
     setCurrentConversationId(id);
     setMessages([]);
-
-    const res = await fetch(`/api/conversations/${id}/messages`);
+    const res  = await fetch(`/api/conversations/${id}/messages`);
     const data = await res.json();
     if (Array.isArray(data)) setMessages(data);
-
     setLoading(false);
     if (sidebarOpen) toggleSidebar();
   };
 
   return (
     <>
+      {/* ── Panel ─────────────────────────────────────────── */}
       <aside
         className={`
-          sidebar-root relative z-0
-          transition-all duration-300 ease-in-out flex-shrink-0
+          sidebar-root relative z-10 flex-shrink-0
+          transition-all duration-300 ease-in-out
           ${sidebarOpen
-            ? 'absolute top-0 left-0 bottom-0 h-screen px-5 !w-full'
+            ? 'absolute top-0 left-0 bottom-0 h-screen !w-full sm:!w-72 z-30'
             : 'w-0 border-r-0 overflow-hidden'}
         `}
       >
-        <div className="flex h-full flex-col w-64">
+        <div className="flex h-full flex-col w-full sm:w-72">
+
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 tracking-tight">
-                AI Chat
-              </span>
+          <div className="flex items-center justify-between px-4 py-4"
+               style={{ borderBottom: '1px solid #1e1e2a' }}>
+            <div ref={logoRef}>
+              <ActionWordmark width={130} />
             </div>
-            <button onClick={handleNewChat} className="btn-icon" title="New chat">
+            <button
+              onClick={handleNewChat}
+              className="btn-icon"
+              title="New chat"
+            >
               <MessageSquarePlus className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Chat History */}
-          <div className="flex-1 overflow-y-auto px-3 py-3 no-scrollbar">
-            <p className="text-[10px] uppercase tracking-widest font-semibold px-2 mb-2 text-zinc-400 dark:text-zinc-600">
-              Recent
+          {/* History */}
+          <div className="flex-1 overflow-y-auto px-3 py-4 no-scrollbar">
+            <p className="text-[10px] uppercase tracking-[0.15em] font-semibold px-2 mb-3"
+               style={{ color: '#3a3a50' }}>
+              Conversations
             </p>
 
             {!isSignedIn ? (
-              <p className="text-xs text-center text-zinc-400 dark:text-zinc-600 mt-4 px-2">
-                Sign in to see history
-              </p>
+              <div className="flex flex-col items-center gap-3 mt-8 px-4 text-center">
+                <LogIn className="w-8 h-8" style={{ color: '#3a3a50' }} />
+                <p className="text-xs" style={{ color: '#3a3a50' }}>
+                  Sign in to save your chat history
+                </p>
+                <SignInButton>
+                  <button className="text-xs px-4 py-2 rounded-xl cursor-pointer transition-all duration-150"
+                          style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#AC6AFF' }}>
+                    Sign in
+                  </button>
+                </SignInButton>
+              </div>
             ) : conversations.length === 0 ? (
-              <p className="text-xs text-center text-zinc-400 dark:text-zinc-600 mt-4 px-2">
-                No conversations yet
+              <p className="text-xs text-center mt-6 px-2" style={{ color: '#3a3a50' }}>
+                No conversations yet.<br />Start a new chat!
               </p>
             ) : (
-              <div className="space-y-1">
-                {conversations.map((conv) => (
+              <div ref={listRef} className="space-y-1">
+                {conversations.map(conv => (
                   <button
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv.id)}
-                    className={`
-                      w-full text-left px-3 py-2 rounded-lg text-xs truncate cursor-pointer
-                      transition-colors duration-150
-                      ${currentConversationId === conv.id
-                        ? 'bg-brand-50 dark:bg-brand-600 text-brand-700 dark:text-brand-200'
-                        : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 bg-neutral-100 dark:bg-neutral-950'}
-                    `}
+                    className={`conv-item ${currentConversationId === conv.id ? 'active' : ''}`}
                   >
                     {conv.title}
                   </button>
@@ -125,25 +135,34 @@ export default function Sidebar() {
           </div>
 
           {/* Footer */}
-          <div className="px-3 py-4 border-t border-zinc-200 dark:border-zinc-800 space-y-1">
-            <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-default">
+          <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid #1e1e2a' }}>
+            <div className="flex items-center gap-3 px-2 py-2 rounded-xl transition-colors cursor-default"
+                 style={{ ':hover': { background: 'rgba(255,255,255,0.04)' } }}>
               <Show when="signed-out">
-                <SignInButton />
-                <SignUpButton>
-                  <button className="bg-purple-700 text-white rounded-full font-medium text-sm h-10 px-4 cursor-pointer">
-                    Sign Up
-                  </button>
-                </SignUpButton>
+                <div className="flex gap-2 w-full">
+                  <SignInButton>
+                    <button className="flex-1 text-xs py-2 rounded-xl cursor-pointer transition-all"
+                            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #2a2a3a', color: '#888' }}>
+                      Sign in
+                    </button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <button className="flex-1 text-xs py-2 rounded-xl cursor-pointer transition-all"
+                            style={{ background: 'linear-gradient(135deg,#AC6AFF,#7c3aed)', color: '#fff' }}>
+                      Sign up
+                    </button>
+                  </SignUpButton>
+                </div>
               </Show>
               <Show when="signed-in">
                 <UserButton />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-zinc-200 truncate">
+                    {user?.firstName || user?.fullName}
+                  </p>
+                  <p className="text-xs truncate" style={{ color: '#3a3a50' }}>Free plan</p>
+                </div>
               </Show>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">
-                  {user?.fullName}
-                </p>
-                <p className="text-xs text-zinc-400 dark:text-zinc-500 truncate">Free plan</p>
-              </div>
             </div>
 
             <button onClick={() => setSettingsOpen(true)} className="btn-ghost w-full justify-start">
@@ -154,22 +173,35 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Toggle button */}
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 sm:hidden"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+          onClick={toggleSidebar}
+        />
+      )}
+
+      {/* ── Toggle button ───────────────────────────────────── */}
       <button
         onClick={toggleSidebar}
-        title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+        title={sidebarOpen ? 'Close' : 'Open sidebar'}
         className={`
-          absolute top-1/2 -translate-y-1/2 z-20
-          w-5 h-10 flex items-center justify-center
-          bg-white dark:bg-zinc-900
-          border border-zinc-200 dark:border-zinc-700 border-l-0
-          rounded-r-lg shadow-sm
-          text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200
-          transition-all duration-300 cursor-pointer
-          ${sidebarOpen ? 'left-[297px]' : 'left-0'}
+          absolute top-1/2 -translate-y-1/2 z-20 cursor-pointer
+          w-5 h-12 flex items-center justify-center
+          rounded-r-lg transition-all duration-300
+          ${sidebarOpen ? 'left-72' : 'left-0'}
         `}
+        style={{
+          background: '#18181f',
+          border: '1px solid #1e1e2a',
+          borderLeft: 'none',
+          color: '#3a3a50',
+        }}
       >
-        {sidebarOpen ? <ChevronLeft className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+        {sidebarOpen
+          ? <ChevronLeft className="w-3 h-3" />
+          : <ChevronRight className="w-3 h-3" />}
       </button>
     </>
   );
